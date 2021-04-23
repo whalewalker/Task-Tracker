@@ -5,6 +5,7 @@ import AddTask from "./component/AddTask";
 
 let userId = 4;
 const App = () => {
+  const [showAddTask, setShowAddTask] = useState(false)
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -46,8 +47,8 @@ const App = () => {
 
   return (
     <div className="container">
-      <Header />
-      <AddTask  onAdd = {addTaskHandler}/>
+      <Header onAdd = {() => setShowAddTask(!showAddTask)} showAdd = {showAddTask}/>
+      {showAddTask && <AddTask  onAdd = {addTaskHandler}/>}
       {tasks.length > 0 ? (
         <Tasks
           tasks={tasks}
