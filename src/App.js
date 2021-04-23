@@ -1,7 +1,9 @@
 import Header from "./component/Header";
 import { useState } from "react";
 import Tasks from "./component/Tasks";
+import AddTask from "./component/AddTask";
 
+let userId = 4;
 const App = () => {
   const [tasks, setTasks] = useState([
     {
@@ -36,9 +38,16 @@ const App = () => {
     );
   };
 
+  const addTaskHandler = (task) => {
+    const id = userId++;
+    const newTask = {id, ...task}
+    setTasks([...tasks, newTask])
+  }
+
   return (
     <div className="container">
       <Header />
+      <AddTask  onAdd = {addTaskHandler}/>
       {tasks.length > 0 ? (
         <Tasks
           tasks={tasks}
