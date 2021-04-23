@@ -13,6 +13,7 @@ const Task = ({ task, onDelete, onToggle }) => {
         <FaTimes style={deleteBtn} onClick={() => onDelete(task.id)} />
       </h3>
       <p>{task.day}</p>
+      <p>{task.time}</p>
     </div>
   );
 };

@@ -1,33 +1,32 @@
 import Header from "./component/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tasks from "./component/Tasks";
 import AddTask from "./component/AddTask";
-
-let userId = 4;
+ 
 const App = () => {
-  const [showAddTask, setShowAddTask] = useState(false)
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      text: "Doctors Appointment",
-      day: "Feb 5th at 2:30pm",
-      reminder: true,
-    },
-    {
-      id: 2,
-      text: "Meeting at School",
-      day: "Feb 6th at 1:30pm",
-      reminder: true,
-    },
-    {
-      id: 3,
-      text: "Food Shooping",
-      day: "Feb 5th at 2:30pm",
-      reminder: false,
-    },
-  ]);
+  const [showAddTask, setShowAddTask] = useState(false);
+  const [tasks, setTasks] = useState([]);
 
-  const deleteHandler = (id) => {
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks();
+      setTasks(tasksFromServer);
+    };
+    getTasks();
+  }, []);
+
+  // Fetch tasks fron json server
+  const fetchTasks = async () => {
+    const res = await fetch("http://localhost:5000/tasks");
+    const data = await res.json();
+
+    return data;
+  };
+
+  const deleteHandler = async (id) => {
+    await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: 'DELETE'
+    })
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
@@ -39,16 +38,28 @@ const App = () => {
     );
   };
 
-  const addTaskHandler = (task) => {
-    const id = userId++;
-    const newTask = {id, ...task}
-    setTasks([...tasks, newTask])
-  }
+  const addTaskHandler = async (task) => {
+    const res = await fetch("http://localhost:5000/tasks", {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    });
+
+
+    const data = await res.json()
+
+    setTasks([...tasks, data]);
+  };
 
   return (
     <div className="container">
-      <Header onAdd = {() => setShowAddTask(!showAddTask)} showAdd = {showAddTask}/>
-      {showAddTask && <AddTask  onAdd = {addTaskHandler}/>}
+      <Header
+        onAdd={() => setShowAddTask(!showAddTask)}
+        showAdd={showAddTask}
+      />
+      {showAddTask && <AddTask onAdd={addTaskHandler} />}
       {tasks.length > 0 ? (
         <Tasks
           tasks={tasks}
