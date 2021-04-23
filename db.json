@@ -1,17 +1,17 @@
 {
   "tasks": [
     {
-      "text": "test 2",
-      "day": "",
-      "time": "",
+      "text": "Test",
+      "day": "2021-04-02",
+      "time": "20:12",
       "reminder": false,
       "id": 1
     },
     {
-      "text": "test3",
-      "day": "2021-04-08",
-      "time": "",
-      "reminder": true,
+      "text": "Test2",
+      "day": "2021-04-01",
+      "time": "20:13",
+      "reminder": false,
       "id": 2
     }
   ]
