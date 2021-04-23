@@ -1,7 +1,10 @@
 import Header from "./component/Header";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Tasks from "./component/Tasks";
 import AddTask from "./component/AddTask";
+import Footer from "./component/Footer";
+import About from "./component/About";
 
 const App = () => {
   const [showAddTask, setShowAddTask] = useState(false);
@@ -40,18 +43,18 @@ const App = () => {
 
   const reminderHandler = async (id) => {
     const taskToToggle = await fetchTask(id);
-    const updatedTask = { ...taskToToggle, reminder: !taskToToggle.reminder }
+    const updatedTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
 
     const res = await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify(updatedTask),
-    })
+    });
 
     const data = await res.json();
-    
+
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, reminder: data.reminder } : task
@@ -74,22 +77,25 @@ const App = () => {
   };
 
   return (
-    <div className="container">
-      <Header
-        onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask}
-      />
-      {showAddTask && <AddTask onAdd={addTaskHandler} />}
-      {tasks.length > 0 ? (
-        <Tasks
-          tasks={tasks}
-          onDelete={deleteHandler}
-          onToggle={reminderHandler}
+    <Router>
+      <div className="container">
+        <Header
+          onAdd={() => setShowAddTask(!showAddTask)}
+          showAdd={showAddTask}
         />
-      ) : (
-        <h1 className="empty">No tasks to show</h1>
-      )}
-    </div>
+        {showAddTask && <AddTask onAdd={addTaskHandler} />}
+        {tasks.length > 0 ? (
+          <Tasks
+            tasks={tasks}
+            onDelete={deleteHandler}
+            onToggle={reminderHandler}
+          />
+        ) : (
+          <h1 className="empty">No tasks to show</h1>
+        )}
+        <Footer />
+      </div>
+    </Router>
   );
 };
 
